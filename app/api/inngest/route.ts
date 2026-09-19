@@ -1,8 +1,9 @@
 import { serve } from "inngest/next";
 import { inngest } from "@/lib/inngest/client";
-import { sendWeeklyNewsSummary, sendSignUpEmail, checkStockAlerts, checkInactiveUsers } from "@/lib/inngest/functions";
+import { sendSignUpEmail, checkStockAlerts, checkInactiveUsers } from "@/lib/inngest/functions";
 
 export const { GET, POST, PUT } = serve({
     client: inngest,
-    functions: [sendSignUpEmail, sendWeeklyNewsSummary, checkStockAlerts, checkInactiveUsers],
+    // Weekly news broadcasts are disabled: do not register sendWeeklyNewsSummary.
+    functions: [sendSignUpEmail, checkStockAlerts, checkInactiveUsers],
 })

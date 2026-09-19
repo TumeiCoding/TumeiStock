@@ -66,7 +66,7 @@ Our background jobs are defined in `lib/inngest/functions.ts`.
 | ID | Type | Schedule/Trigger | Purpose |
 | :--- | :--- | :--- | :--- |
 | `sign-up-email` | 🔔 Event | `app/user.created` | **Personalized Onboarding.** Generates a custom welcome message based on user quiz results. |
-| `weekly-news-summary` | ⏱️ Cron | `0 9 * * 1` (Mon 9AM) | **Market Intelligence.** Summarizes top financial news and broadcasts to all users via Kit. |
+| `weekly-news-summary` | Disabled | Not registered | Weekly market news broadcasts are disabled for both cron and event triggers. Implementation retained in `lib/inngest/functions.ts`. |
 | `check-stock-alerts` | ⏱️ Cron | `*/5 * * * *` | **Real-time Monitoring.** Checks user price targets against live market data. |
 | `check-inactive-users` | ⏱️ Cron | `0 10 * * *` | **Re-engagement.** Identifies dormant users (>30 days) and sends a "We miss you" nudge. |
 

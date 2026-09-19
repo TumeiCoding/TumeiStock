@@ -71,12 +71,12 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
             )}
             <CommandDialog open={open} onOpenChange={setOpen} className="search-dialog">
                 <div className="search-field">
-                    <CommandInput value={searchTerm} onValueChange={setSearchTerm} placeholder="Search stocks..." className="search-input" />
+                    <CommandInput value={searchTerm} onValueChange={setSearchTerm} placeholder="Search stocks, USOIL, US10Y, GOLD..." className="search-input" />
                     {loading && <Loader2 className="search-loader" />}
                 </div>
                 <CommandList className="search-list">
                     {loading ? (
-                        <CommandEmpty className="search-list-empty">Loading stocks...</CommandEmpty>
+                        <CommandEmpty className="search-list-empty">Searching markets...</CommandEmpty>
                     ) : displayStocks?.length === 0 ? (
                         <div className="search-list-indicator">
                             {isSearchMode ? 'No results found' : 'No stocks available'}
@@ -90,7 +90,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                             {displayStocks?.map((stock) => (
                                 <li key={stock.symbol} className="search-item">
                                     <Link
-                                        href={`/stocks/${stock.symbol}`}
+                                        href={`/stocks/${encodeURIComponent(stock.symbol)}`}
                                         onClick={handleSelectStock}
                                         className="search-item-link"
                                     >

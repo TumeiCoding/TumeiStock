@@ -4,7 +4,7 @@ import StockSentimentCard from "@/components/stocks/StockSentimentCard";
 import {
     SYMBOL_INFO_WIDGET_CONFIG,
     CANDLE_CHART_WIDGET_CONFIG,
-    BASELINE_WIDGET_CONFIG,
+    SECONDARY_CHART_WIDGET_CONFIG,
     TECHNICAL_ANALYSIS_WIDGET_CONFIG,
     COMPANY_PROFILE_WIDGET_CONFIG,
     COMPANY_FINANCIALS_WIDGET_CONFIG,
@@ -15,10 +15,12 @@ import { headers } from 'next/headers';
 import { isStockInWatchlist } from '@/lib/actions/watchlist.actions';
 import { getStockSentimentInsights } from '@/lib/actions/adanos.actions';
 import { formatSymbolForTradingView } from '@/lib/utils';
+import { getMarketInstrument } from '@/lib/market-instruments';
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
     const { symbol } = await params;
     const tvSymbol = formatSymbolForTradingView(symbol);
+    const instrument = getMarketInstrument(symbol);
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
     const session = await auth.api.getSession({
@@ -27,7 +29,7 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
     const userId = session?.user?.id;
     const [isInWatchlist, sentimentInsights] = await Promise.all([
         userId ? isStockInWatchlist(userId, symbol) : Promise.resolve(false),
-        getStockSentimentInsights(symbol),
+        instrument ? Promise.resolve(null) : getStockSentimentInsights(symbol),
     ]);
 
     return (
@@ -51,7 +53,7 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
 
                     <TradingViewWidget
                         scriptUrl={`${scriptUrl}advanced-chart.js`}
-                        config={BASELINE_WIDGET_CONFIG(tvSymbol)}
+                        config={SECONDARY_CHART_WIDGET_CONFIG(tvSymbol)}
                         className="custom-chart"
                         height={600}
                         allowExpand={true}
@@ -63,13 +65,13 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
                     <div className="flex items-center justify-between">
                         <WatchlistButton
                             symbol={symbol.toUpperCase()}
-                            company={symbol.toUpperCase()}
+                            company={instrument?.name ?? symbol.toUpperCase()}
                             isInWatchlist={isInWatchlist}
                             userId={userId}
                         />
                     </div>
 
-                    <StockSentimentCard insight={sentimentInsights} />
+                    {sentimentInsights && <StockSentimentCard insight={sentimentInsights} />}
 
                     <TradingViewWidget
                         scriptUrl={`${scriptUrl}technical-analysis.js`}
@@ -77,6 +79,7 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
                         height={400}
                     />
 
+                    {!instrument && <>
                     <TradingViewWidget
                         scriptUrl={`${scriptUrl}company-profile.js`}
                         config={COMPANY_PROFILE_WIDGET_CONFIG(tvSymbol)}
@@ -88,6 +91,7 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
                         config={COMPANY_FINANCIALS_WIDGET_CONFIG(tvSymbol)}
                         height={800}
                     />
+                    </>}
                 </div>
             </section>
         </div>

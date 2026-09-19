@@ -214,7 +214,9 @@ const FINNHUB_TO_TRADINGVIEW_EXCHANGE: Record<string, string> = {
 
 export function formatSymbolForTradingView(symbol: string): string {
     if (!symbol) return '';
-    const upperSymbol = symbol.toUpperCase();
+    const upperSymbol = symbol.trim().toUpperCase();
+    // Qualified TradingView symbols already identify their exact data source.
+    if (upperSymbol.includes(':')) return upperSymbol;
 
     // Check for known exchange suffixes, trying longer suffixes first
     // to avoid ".TWO" matching ".TW" prematurely

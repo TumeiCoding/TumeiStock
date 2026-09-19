@@ -1,3 +1,4 @@
+import type { ObjectId } from 'mongodb';
 import { inngest } from "@/lib/inngest/client";
 import { NEWS_SUMMARY_EMAIL_PROMPT, PERSONALIZED_WELCOME_EMAIL_PROMPT } from "@/lib/inngest/prompts";
 import { sendNewsSummaryEmail, sendWelcomeEmail } from "@/lib/nodemailer";
@@ -205,7 +206,7 @@ export const sendWeeklyNewsSummary = inngest.createFunction(
 )
 
 export const checkStockAlerts = inngest.createFunction(
-    { id: 'check-stock-alerts' },
+    { id: 'check-stock-alerts', concurrency: { limit: 1 } },
     { cron: '*/5 * * * *' }, // Run every 5 minutes
     async ({ step }) => {
         // Step 1: Fetch active alerts
@@ -271,22 +272,54 @@ export const checkStockAlerts = inngest.createFunction(
             }
         }
 
-        // Step 5: Process triggers
-        if (triggeredAlerts.length > 0) {
-            await step.run('process-triggered-alerts', async () => {
+        // Separate durable steps prevent a database-update retry from resending an email.
+        for (const { alert, currentPrice } of triggeredAlerts) {
+            const alertId = String(alert._id);
+            const delivery = await step.run(`send-stock-alert-${alertId}`, async () => {
                 const { connectToDatabase } = await import("@/database/mongoose");
                 const { Alert } = await import("@/database/models/alert.model");
-                // In a real app we would import 'kit' here and use kit.sendBroadcast or similar
-                // For now, we just log it as the critical logic is the detection
-                await connectToDatabase();
+                const { sendStockAlertEmail } = await import("@/lib/nodemailer/stock-alert");
+                const mongoose = await connectToDatabase();
+                const db = mongoose.connection.db;
+                if (!db) throw new Error('MongoDB connection not found');
 
-                for (const { alert, currentPrice } of triggeredAlerts) {
-                    console.log(`🚀 ALERT FIRED: ${alert.symbol} is ${currentPrice} (${alert.condition} ${alert.targetPrice})`);
+                // Another run or the user may have changed/deleted the alert since fetching.
+                const current = await Alert.findOne({
+                    _id: alertId, active: true, triggered: false,
+                    expiresAt: { $gt: new Date() },
+                }).lean();
+                if (!current) return null;
 
-                    // Mark triggered
-                    await Alert.findByIdAndUpdate(alert._id, { triggered: true, active: false });
+                const userId = String(current.userId);
+                const user = await db.collection<{ _id: string | ObjectId; id?: string; email?: string }>('user').findOne({
+                    $or: [
+                        { id: userId },
+                        { _id: userId },
+                        ...(mongoose.isObjectIdOrHexString(userId)
+                            ? [{ _id: new mongoose.Types.ObjectId(userId) }] : []),
+                    ],
+                });
+                if (!user?.email || typeof user.email !== 'string') {
+                    throw new Error(`Recipient not found for stock alert ${alertId}`);
                 }
+
+                return await sendStockAlertEmail({
+                    email: user.email,
+                    symbol: current.symbol,
+                    condition: current.condition,
+                    targetPrice: current.targetPrice,
+                    currentPrice,
+                });
             });
+
+            if (delivery) {
+                await step.run(`complete-stock-alert-${alertId}`, async () => {
+                    const { connectToDatabase } = await import("@/database/mongoose");
+                    const { Alert } = await import("@/database/models/alert.model");
+                    await connectToDatabase();
+                    await Alert.findByIdAndUpdate(alertId, { triggered: true, active: false });
+                });
+            }
         }
 
         return {

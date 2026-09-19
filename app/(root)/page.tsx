@@ -15,7 +15,7 @@ const Home = () => {
                 <div className="md:col-span-1 xl:col-span-1">
                     <TradingViewWidget
                         title="Market Overview"
-                        scriptUrl={`${scriptUrl}market-overview.js`}
+                        scriptUrl={`${scriptUrl}advanced-chart.js`}
                         config={MARKET_OVERVIEW_WIDGET_CONFIG}
                         className="custom-chart"
                         height={600}
@@ -47,16 +47,6 @@ const Home = () => {
                 </div>
 
             </section>
-            <div className="w-full flex flex-col items-center justify-center mt-8 gap-4">
-                <h2 className="text-xl font-semibold text-gray-200">Upvote us on Peerlist 🚀</h2>
-                <a href="https://peerlist.io/ravixalgorithm/project/openstock" target="_blank" rel="noreferrer">
-                    <img
-                        src="https://peerlist.io/api/v1/projects/embed/PRJH8OED7MBL9MGB9HRMKAKLM66KNN?showUpvote=true&theme=light"
-                        alt="OpenStock"
-                        style={{ width: "auto", height: "72px" }}
-                    />
-                </a>
-            </div>
         </div>
     )
 }

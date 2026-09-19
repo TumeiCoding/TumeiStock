@@ -3,6 +3,7 @@
 import { getDateRange, validateArticle, formatArticle } from '@/lib/utils';
 import { POPULAR_STOCK_SYMBOLS } from '@/lib/constants';
 import { cache } from 'react';
+import { searchMarketInstruments } from '@/lib/market-instruments';
 
 const FINNHUB_BASE_URL = 'https://finnhub.io/api/v1';
 const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY ?? '';
@@ -191,15 +192,15 @@ export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> 
 }
 
 export const searchStocks = cache(async (query?: string): Promise<StockWithWatchlistStatus[]> => {
+    const trimmed = typeof query === 'string' ? query.trim() : '';
+    const instruments = searchMarketInstruments(trimmed);
     try {
         const token = FINNHUB_API_KEY;
         if (!token) {
             // If no token, log and return empty to avoid throwing per requirements
             console.error('Error in stock search:', new Error('FINNHUB API key is not configured'));
-            return [];
+            return instruments;
         }
-
-        const trimmed = typeof query === 'string' ? query.trim() : '';
 
         let results: SearchStockCandidate[] = [];
 
@@ -260,9 +261,14 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
             })
             .slice(0, 15);
 
-        return mapped;
+        const seen = new Set<string>();
+        return [...instruments, ...mapped].filter((item) => {
+            if (!item.symbol || seen.has(item.symbol)) return false;
+            seen.add(item.symbol);
+            return true;
+        }).slice(0, 15);
     } catch (err) {
         console.error('Error in stock search:', err);
-        return [];
+        return instruments;
     }
 });

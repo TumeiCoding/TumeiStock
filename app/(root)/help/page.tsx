@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import {
   HelpCircle,
   MessageCircle,
-  BookOpen,
   Lightbulb,
   Mail,
   Github,
@@ -51,14 +50,7 @@ export default function HelpPage() {
       </div>
 
       {/* Quick Action Grid */}
-      <div className="grid md:grid-cols-3 gap-4 mb-16">
-        <HelpCard
-          icon={<BookOpen className="text-teal-400" />}
-          title="Read Docs"
-          desc="Deep dive into features and API integration."
-          link="/api-docs"
-          linkText="View Documentation"
-        />
+      <div className="grid md:grid-cols-2 gap-4 mb-16">
         <HelpCard
           icon={<MessageCircle className="text-purple-400" />}
           title="Community Chat"
