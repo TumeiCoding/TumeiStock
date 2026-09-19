@@ -17,7 +17,7 @@ const requiredVars = {
     'BETTER_AUTH_URL': 'Auth URL (e.g., http://localhost:3000)',
     
     // Finnhub
-    'NEXT_PUBLIC_FINNHUB_API_KEY': 'Finnhub API key (public)',
+    'FINNHUB_API_KEY': 'Finnhub API key (server-only)',
     'FINNHUB_BASE_URL': 'Finnhub API base URL',
     
     // Inngest
@@ -30,7 +30,7 @@ const requiredVars = {
 };
 
 const deprecatedVars = {
-    'FINNHUB_API_KEY': 'Legacy Finnhub key (deprecated, use NEXT_PUBLIC_FINNHUB_API_KEY)',
+    'NEXT_PUBLIC_FINNHUB_API_KEY': 'Deprecated public key variable; rename to FINNHUB_API_KEY',
 };
 
 const optionalVars = {
@@ -96,8 +96,8 @@ if (missing.length > 0) {
 if (warnings.length > 0) {
     console.log('\n⚠️  Warnings:');
     console.log('-'.repeat(60));
-    warnings.forEach(({ key, message }) => {
-        console.log(`  ⚠ ${key}: ${message}\n`);
+    warnings.forEach(({ key, description, message }) => {
+        console.log(`  ⚠ ${key}: ${message}. ${description}\n`);
     });
 }
 

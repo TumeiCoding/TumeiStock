@@ -1,18 +1,5 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
-import dns from 'dns';
-
-try {
-    dns.setServers(['8.8.8.8']);
-    console.log('Set DNS servers to 8.8.8.8');
-} catch (e) {
-    console.warn('Could not set DNS servers:', e);
-}
-
-dns.resolveSrv('_mongodb._tcp.cluster0.scwvh5g.mongodb.net', (err, addresses) => {
-    if (err) console.error('DNS SRV Error:', err);
-    else console.log('DNS SRV Records:', addresses);
-});
 
 async function main() {
     const uri = process.env.MONGODB_URI;
@@ -23,7 +10,8 @@ async function main() {
 
     try {
         const startedAt = Date.now();
-        await mongoose.connect(uri, { bufferCommands: false, family: 4 });
+        await mongoose.connect(uri, { bufferCommands: false, family: 4, serverSelectionTimeoutMS: 10000 });
+        await mongoose.connection.db.admin().ping();
         const elapsed = Date.now() - startedAt;
 
         const dbName = mongoose.connection?.name || '(unknown)';

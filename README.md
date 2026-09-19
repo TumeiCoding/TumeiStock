@@ -257,8 +257,8 @@ BETTER_AUTH_SECRET=your_better_auth_secret
 BETTER_AUTH_URL=http://localhost:3000
 
 # Finnhub
-# Note: NEXT_PUBLIC_FINNHUB_API_KEY is required for Vercel deployment
-NEXT_PUBLIC_FINNHUB_API_KEY=your_finnhub_key
+# Server-only key; use the same name when deploying to Vercel
+FINNHUB_API_KEY=your_finnhub_key
 FINNHUB_BASE_URL=https://finnhub.io/api/v1
 
 # Sentiment insights (optional)
@@ -298,8 +298,8 @@ BETTER_AUTH_SECRET=your_better_auth_secret
 BETTER_AUTH_URL=http://localhost:3000
 
 # Finnhub
-# Note: NEXT_PUBLIC_FINNHUB_API_KEY is required for Vercel deployment
-NEXT_PUBLIC_FINNHUB_API_KEY=your_finnhub_key
+# Server-only key; use the same name when deploying to Vercel
+FINNHUB_API_KEY=your_finnhub_key
 FINNHUB_BASE_URL=https://finnhub.io/api/v1
 
 # Sentiment insights (optional)
@@ -375,7 +375,7 @@ public/assets/images/   # logos and screenshots
 
 - Finnhub
     - Stock search, company profiles, and market news.
-    - Set `NEXT_PUBLIC_FINNHUB_API_KEY` and `FINNHUB_BASE_URL` (default: https://finnhub.io/api/v1).
+    - Set `FINNHUB_API_KEY` on the server. The API base URL is https://finnhub.io/api/v1.
     - Free tiers may return delayed quotes; respect rate limits and terms.
 
 - Adanos sentiment insights (optional)
