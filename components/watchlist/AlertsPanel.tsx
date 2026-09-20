@@ -1,12 +1,18 @@
 "use client";
 
 import React from "react";
-import { Trash2, TrendingUp, Bell } from "lucide-react";
+import { Trash2, Bell } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { deleteAlert } from "@/lib/actions/alert.actions";
 
 interface AlertsPanelProps {
-    alerts: any[];
+    alerts: {
+        _id: string;
+        symbol: string;
+        targetPrice: number;
+        condition: 'ABOVE' | 'BELOW';
+        createdAt: string;
+    }[];
     onRefresh?: () => void;
 }
 
@@ -31,7 +37,7 @@ export default function AlertsPanel({ alerts, onRefresh }: AlertsPanelProps) {
             <div className="space-y-3">
                 {alerts.length === 0 ? (
                     <div className="text-center py-8 text-gray-500 text-sm">
-                        No active alerts. Add one from the watchlist.
+                        No active alerts. Click the bell next to a stock to create one.
                     </div>
                 ) : (
                     alerts.map((alert) => (

@@ -22,7 +22,7 @@ export async function addToWatchlist(userId: string, symbol: string, company: st
             { upsert: true, new: true }
         );
 
-        revalidatePath('/watchlist');
+        revalidatePath('/');
         return JSON.parse(JSON.stringify(newItem));
     } catch (error) {
         console.error('Error adding to watchlist:', error);
@@ -34,8 +34,7 @@ export async function removeFromWatchlist(userId: string, symbol: string) {
     try {
         await connectToDatabase();
         await Watchlist.findOneAndDelete({ userId, symbol: symbol.toUpperCase() });
-        revalidatePath('/watchlist');
-        revalidatePath('/'); // In case it's used elsewhere
+        revalidatePath('/');
         return { success: true };
     } catch (error) {
         console.error('Error removing from watchlist:', error);

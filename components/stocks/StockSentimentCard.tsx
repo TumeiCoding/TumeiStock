@@ -39,9 +39,9 @@ export default function StockSentimentCard({ insight }: StockSentimentCardProps)
     }
 
     return (
-        <section className="rounded-2xl border border-gray-800 bg-gray-950/40 p-5 backdrop-blur-sm">
+        <section className="@container min-w-0 rounded-2xl border border-gray-800 bg-gray-950/40 p-5 backdrop-blur-sm">
             <div className="flex flex-col gap-5">
-                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                <div className="flex flex-col gap-3 @xl:flex-row @xl:items-start @xl:justify-between">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
                             Sentiment Insights
@@ -59,7 +59,7 @@ export default function StockSentimentCard({ insight }: StockSentimentCardProps)
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 rounded-2xl border border-gray-800 bg-black/20 p-4 md:min-w-[320px]">
+                    <div className="grid grid-cols-2 gap-3 rounded-2xl border border-gray-800 bg-black/20 p-4 @xl:min-w-[320px]">
                         <div>
                             <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-gray-500">
                                 Avg. Buzz
@@ -95,7 +95,7 @@ export default function StockSentimentCard({ insight }: StockSentimentCardProps)
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 @xl:grid-cols-2">
                     {insight.sources.map((source) => (
                         <article
                             key={source.source}

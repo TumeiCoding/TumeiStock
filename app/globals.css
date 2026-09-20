@@ -378,16 +378,6 @@
     }
 }
 
-/* Market News Component Styles */
-.scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-
 /* TradingView Advanced Chart Widget Styles */
 .tradingview-widget-container {
     position: relative;

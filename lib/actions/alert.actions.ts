@@ -1,7 +1,7 @@
 'use server';
 
 import { connectToDatabase } from '@/database/mongoose';
-import { Alert, type IAlert } from '@/database/models/alert.model';
+import { Alert } from '@/database/models/alert.model';
 import { revalidatePath } from 'next/cache';
 
 // Create a new alert
@@ -18,7 +18,7 @@ export async function createAlert(params: {
             active: true,
             // expiresAt handled by default value in schema
         });
-        revalidatePath('/watchlist');
+        revalidatePath('/');
         return JSON.parse(JSON.stringify(newAlert));
     } catch (error) {
         console.error('Error creating alert:', error);
@@ -43,7 +43,7 @@ export async function deleteAlert(alertId: string) {
     try {
         await connectToDatabase();
         await Alert.findByIdAndDelete(alertId);
-        revalidatePath('/watchlist');
+        revalidatePath('/');
         return { success: true };
     } catch (error) {
         console.error('Error deleting alert:', error);
@@ -56,7 +56,7 @@ export async function toggleAlert(alertId: string, active: boolean) {
     try {
         await connectToDatabase();
         await Alert.findByIdAndUpdate(alertId, { active });
-        revalidatePath('/watchlist');
+        revalidatePath('/');
         return { success: true };
     } catch (error) {
         console.error('Error toggling alert:', error);

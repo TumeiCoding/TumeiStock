@@ -35,43 +35,6 @@ export function formatMarketCapValue(marketCapUsd: number): string {
     return `$${marketCapUsd.toFixed(2)}`; // Below one million, show full USD amount
 }
 
-export const getDateRange = (days: number) => {
-    const toDate = new Date();
-    const fromDate = new Date();
-    fromDate.setDate(toDate.getDate() - days);
-    return {
-        to: toDate.toISOString().split('T')[0],
-        from: fromDate.toISOString().split('T')[0],
-    };
-};
-
-// Get today's date range (from today to today)
-export const getTodayDateRange = () => {
-    const today = new Date();
-    const todayString = today.toISOString().split('T')[0];
-    return {
-        to: todayString,
-        from: todayString,
-    };
-};
-
-// Calculate news per symbol based on watchlist size
-export const calculateNewsDistribution = (symbolsCount: number) => {
-    let itemsPerSymbol: number;
-    let targetNewsCount = 6;
-
-    if (symbolsCount < 3) {
-        itemsPerSymbol = 3; // Fewer symbols, more news each
-    } else if (symbolsCount === 3) {
-        itemsPerSymbol = 2; // Exactly 3 symbols, 2 news each = 6 total
-    } else {
-        itemsPerSymbol = 1; // Many symbols, 1 news each
-        targetNewsCount = 6; // Don't exceed 6 total
-    }
-
-    return { itemsPerSymbol, targetNewsCount };
-};
-
 // Check for required article fields
 export const validateArticle = (article: RawNewsArticle) =>
     article.headline && article.summary && article.url && article.datetime;
@@ -81,20 +44,18 @@ export const getTodayString = () => new Date().toISOString().split('T')[0];
 
 export const formatArticle = (
     article: RawNewsArticle,
-    isCompanyNews: boolean,
-    symbol?: string,
     index: number = 0
 ) => ({
-    id: isCompanyNews ? Date.now() + Math.random() : article.id + index,
+    id: article.id + index,
     headline: article.headline!.trim(),
     summary:
-        article.summary!.trim().substring(0, isCompanyNews ? 200 : 150) + '...',
-    source: article.source || (isCompanyNews ? 'Company News' : 'Market News'),
+        article.summary!.trim().substring(0, 150) + '...',
+    source: article.source || 'Market News',
     url: article.url!,
     datetime: article.datetime!,
     image: article.image || '',
-    category: isCompanyNews ? 'company' : article.category || 'general',
-    related: isCompanyNews ? symbol! : article.related || '',
+    category: article.category || 'general',
+    related: article.related || '',
 });
 
 export const formatChangePercent = (changePercent?: number) => {

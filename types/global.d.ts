@@ -164,10 +164,6 @@ declare global {
         image?: string;
     };
 
-    type WatchlistNewsProps = {
-        news?: MarketNewsArticle[];
-    };
-
     type SearchCommandProps = {
         open?: boolean;
         setOpen?: (open: boolean) => void;

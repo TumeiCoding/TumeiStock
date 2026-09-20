@@ -56,6 +56,9 @@ const WatchlistButton = ({
 
             // Call external handler if provided (e.g. for UI refresh)
             onWatchlistChange?.(symbol, next);
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: "watchlist-updated" }, window.location.origin);
+            }
         } catch (error) {
             console.error("Watchlist action failed:", error);
             setAdded(!next); // Revert on error

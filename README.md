@@ -123,7 +123,7 @@ Language composition
     - Company profile and financials widgets
     - Optional cross-source sentiment insights for Reddit, X.com, news, and Polymarket
 - Market overview
-    - Heatmap, quotes, and top stories (TradingView widgets)
+    - Heatmap and quotes (TradingView widgets)
 - Personalized onboarding
     - Collects country, investment goals, risk tolerance, preferred industry
 - Email & automation

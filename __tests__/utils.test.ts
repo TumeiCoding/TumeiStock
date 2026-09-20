@@ -4,7 +4,6 @@ import {
     formatMarketCapValue,
     formatChangePercent,
     getChangeColorClass,
-    calculateNewsDistribution,
 } from '@/lib/utils';
 
 describe('formatSymbolForTradingView', () => {
@@ -184,21 +183,5 @@ describe('getChangeColorClass', () => {
 
     it('returns red for negative', () => {
         expect(getChangeColorClass(-0.5)).toBe('text-red-500');
-    });
-});
-
-describe('calculateNewsDistribution', () => {
-    it('returns 3 items per symbol for 1-2 symbols', () => {
-        expect(calculateNewsDistribution(1).itemsPerSymbol).toBe(3);
-        expect(calculateNewsDistribution(2).itemsPerSymbol).toBe(3);
-    });
-
-    it('returns 2 items per symbol for exactly 3', () => {
-        expect(calculateNewsDistribution(3).itemsPerSymbol).toBe(2);
-    });
-
-    it('returns 1 item per symbol for 4+', () => {
-        expect(calculateNewsDistribution(5).itemsPerSymbol).toBe(1);
-        expect(calculateNewsDistribution(10).itemsPerSymbol).toBe(1);
     });
 });

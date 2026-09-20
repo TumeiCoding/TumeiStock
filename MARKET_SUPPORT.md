@@ -51,6 +51,43 @@ OpenStock supports stocks from multiple exchanges worldwide, but there are impor
 
 ## ⚠️ Known Limitations
 
+### Non-stock search
+
+Search also includes a curated catalog with English and Chinese aliases:
+
+| Search | TradingView symbol | Instrument |
+| --- | --- | --- |
+| VIX | TVC:VIX | S&P 500 volatility index |
+| DXY | TVC:DXY | US dollar index |
+| US10Y | TVC:US10Y | US ten-year Treasury yield |
+| US02Y / US2Y | TVC:US02Y | US two-year Treasury yield |
+| USOIL / WTI | TVC:USOIL | WTI crude oil CFD |
+| GOLD | TVC:GOLD | Gold CFD |
+| BTCUSD / BTC | BITSTAMP:BTCUSD | Bitcoin / US dollar |
+| ETHUSD / ETH | BITSTAMP:ETHUSD | Ethereum / US dollar |
+| ES / ES1! | CME_MINI:ES1! | E-mini S&P 500 continuous futures |
+| NQ / NQ1! | CME_MINI:NQ1! | E-mini Nasdaq 100 continuous futures |
+
+Results use qualified symbols to distinguish them from stock tickers.
+Exact aliases rank above incidental name matches; matching stocks remain in
+the results (for example, ES can also match Eversource Energy).
+These entries remain searchable if Finnhub is unavailable. Charts and the
+watchlist use TradingView; company financials and stock sentiment are hidden
+for these instruments. Finnhub quotes and price alerts are not added for them.
+This is a curated supplement, not a complete search of all TradingView markets;
+embedded chart availability still depends on TradingView.
+
+Symbol references: [USOIL](https://www.tradingview.com/symbols/USOIL/?exchange=TVC),
+[US10Y](https://www.tradingview.com/symbols/TVC-US10Y/),
+[GOLD](https://www.tradingview.com/symbols/GOLD/?exchange=TVC),
+[VIX](https://www.tradingview.com/symbols/TVC-VIX/),
+[DXY](https://www.tradingview.com/symbols/TVC-DXY/),
+[US02Y](https://www.tradingview.com/symbols/TVC-US02Y/),
+[BTCUSD](https://www.tradingview.com/symbols/BTCUSD/?exchange=BITSTAMP),
+[ETHUSD](https://www.tradingview.com/symbols/ETHUSD/?exchange=BITSTAMP),
+[ES](https://www.tradingview.com/symbols/CME_MINI-ES1!/),
+[NQ](https://www.tradingview.com/symbols/CME_MINI-NQ1!/).
+
 ### TradingView Widget Limitations
 
 TradingView's free tier embeddable widgets have several restrictions:
